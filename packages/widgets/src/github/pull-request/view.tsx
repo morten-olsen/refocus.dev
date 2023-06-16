@@ -30,7 +30,14 @@ const View = withGithub<Props>(({ owner, repo, pr }) => {
     return null;
   }
 
-  return <Github.PullRequest pullRequest={data} />;
+  return (
+    <Github.PullRequest
+      pullRequest={data}
+      onPress={() =>
+        window.open(`https://github.com/${owner}/${repo}/pull/${pr}`, '_blank')
+      }
+    />
+  );
 }, Github.NotLoggedIn);
 
 export { View };

@@ -26,7 +26,13 @@ const WidgetView = withLinear<LinearIssueProps>(({ id }) => {
   );
 
   return (
-    <Card $fr $gap="sm" $p="md">
+    <Card
+      $fr
+      $gap="sm"
+      $p="md"
+      $m="sm"
+      onClick={() => window.open(data?.issue.url, '_blank')}
+    >
       <View>
         <Typography variant="title">{data?.issue?.title}</Typography>
         <Typography variant="tiny">
