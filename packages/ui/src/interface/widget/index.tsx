@@ -23,6 +23,12 @@ const Wrapper = styled(View)`
   background: ${({ theme }) => theme.colors.bg.base};
 `;
 
+const WidgetWrapper = styled(View)`
+  flex-grow: 0;
+  overflow: hidden;
+  flex: 1;
+`;
+
 const Widget: React.FC<WidgetProps> = ({
   id,
   data,
@@ -47,9 +53,9 @@ const Widget: React.FC<WidgetProps> = ({
   return (
     <WidgetProvider id={id} data={data} setData={setData}>
       <Wrapper className={className} $fr>
-        <View $f={1}>
+        <WidgetWrapper $f={1}>
           <WidgetView />
-        </View>
+        </WidgetWrapper>
         <View $fc>
           {hasMenu && (
             <DropdownMenu>

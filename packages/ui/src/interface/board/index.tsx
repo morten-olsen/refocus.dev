@@ -5,7 +5,7 @@ import {
   useUpdateWidget,
 } from '@refocus/sdk';
 import { IoAddCircleOutline } from 'react-icons/io5';
-import { View } from '../../base';
+import { Masonry, View } from '../../base';
 import { Widget } from '../widget';
 import { AddWidgetFromUrl } from '../add-from-url';
 import { styled } from 'styled-components';
@@ -15,14 +15,12 @@ type BoardProps = {
   id: string;
 };
 
-const Wrapper = styled(View)`
-  flex-wrap: wrap;
-`;
-
 const ItemWrapper = styled(View)`
-  max-width: 400px;
   overflow-y: auto;
   max-height: 500px;
+  max-width: 100%;
+  box-shadow: 0 0 4px 0px ${({ theme }) => theme.colors.bg.highlight};
+  border-radius: ${({ theme }) => theme.radii.md}px;
 `;
 
 const Board: React.FC<BoardProps> = ({ board, id }) => {
@@ -42,19 +40,21 @@ const Board: React.FC<BoardProps> = ({ board, id }) => {
           </AddWidgetFromUrl.Trigger>
         </AddWidgetFromUrl>
       </View>
-      <Wrapper $fr>
-        {Object.entries(board.widgets).map(([widgetId, widget]) => (
-          <ItemWrapper key={widgetId}>
-            <Widget
-              key={widgetId}
-              id={widget.type}
-              data={widget.data}
-              setData={(data) => setWidgetData(id, widgetId, data)}
-              onRemove={() => removeWidget(id, widgetId)}
-            />
-          </ItemWrapper>
-        ))}
-      </Wrapper>
+      <View $p="md">
+        <Masonry>
+          {Object.entries(board.widgets).map(([widgetId, widget]) => (
+            <ItemWrapper key={widgetId}>
+              <Widget
+                key={widgetId}
+                id={widget.type}
+                data={widget.data}
+                setData={(data) => setWidgetData(id, widgetId, data)}
+                onRemove={() => removeWidget(id, widgetId)}
+              />
+            </ItemWrapper>
+          ))}
+        </Masonry>
+      </View>
     </View>
   );
 };

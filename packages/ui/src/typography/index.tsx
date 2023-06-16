@@ -33,6 +33,7 @@ const styles = {
     font-size: 10px;
     font-weight: bold;
     text-transform: uppercase;
+    break-word: break-all;
   `,
 } satisfies Record<string, ReturnType<typeof css>>;
 
