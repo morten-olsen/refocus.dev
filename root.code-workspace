@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "ui",
+			"path": "packages/ui/src"
+		},
+		{
+			"name": "sdk",
+			"path": "packages/sdk/src"
+		},
+		{
+			"name": "widgets",
+			"path": "packages/widgets/src"
+		},
+		{
+			"name": "app",
+			"path": "packages/app/src"
+		},
+		{
+			"name": ".",
+			"path": "."
+		},
+	],
+	"settings": {}
+}

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "declarationDir": "./dist/esm/types",
+    "outDir": "dist/esm",
+    "resolveJsonModule": true,
+  },
+  "extends": "@refocus/config/esm",
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "!src/**/*.stories.tsx"
+  ]
+}

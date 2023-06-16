@@ -1,0 +1,6 @@
+{
+  "generator-x-repo": {
+    "root": "@refocus",
+    "config": "@refocus/config"
+  }
+}

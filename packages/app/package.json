@@ -1,0 +1,45 @@
+{
+  "name": "app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "bundle": "tsc && vite build",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@refocus/sdk": "workspace:^",
+    "@refocus/ui": "workspace:^",
+    "@refocus/widgets": "workspace:^",
+    "framer": "^2.3.0",
+    "framer-motion": "^10.12.16",
+    "localforage": "^1.10.0",
+    "match-sorter": "^6.3.1",
+    "popmotion": "^11.0.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-masonry-component": "^6.3.0",
+    "react-responsive-masonry": "^2.1.7",
+    "react-router-dom": "^6.13.0",
+    "sort-by": "^1.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.37",
+    "@types/react-dom": "^18.0.11",
+    "@types/react-responsive-masonry": "^2.1.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
+    "@vitejs/plugin-react-swc": "^3.0.0",
+    "eslint": "^8.38.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.3.4",
+    "isomorphic-fetch": "^3.0.0",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
+    "stream-browserify": "^3.0.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.9"
+  }
+}

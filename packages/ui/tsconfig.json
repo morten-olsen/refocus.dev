@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "declarationDir": "./dist/cjs/types",
+    "outDir": "dist/cjs",
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+  },
+  "extends": "@refocus/config/cjs",
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "!src/**/*.stories.tsx"
+  ]
+}

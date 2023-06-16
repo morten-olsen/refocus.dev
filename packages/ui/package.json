@@ -1,0 +1,53 @@
+{
+  "devDependencies": {
+    "@refocus/config": "workspace:^",
+    "@storybook/addon-essentials": "^7.0.20",
+    "@storybook/addon-interactions": "^7.0.20",
+    "@storybook/addon-links": "^7.0.20",
+    "@storybook/blocks": "^7.0.20",
+    "@storybook/react": "^7.0.20",
+    "@storybook/react-vite": "^7.0.20",
+    "@storybook/testing-library": "^0.0.14-next.2",
+    "@types/react": "^18.0.37",
+    "@types/styled-components": "^5.1.26",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "storybook": "^7.0.20",
+    "typescript": "^5.0.4"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "default": "./dist/esm/index.js",
+        "types": "./dist/esm/types/index.d.ts"
+      },
+      "require": {
+        "default": "./dist/cjs/index.js",
+        "types": "./dist/cjs/types/index.d.ts"
+      }
+    }
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "main": "./dist/cjs/index.js",
+  "name": "@refocus/ui",
+  "scripts": {
+    "build": "pnpm build:esm && pnpm build:cjs",
+    "build:cjs": "tsc -p tsconfig.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "storybook": "storybook dev -p 6006 --no-open",
+    "build-storybook": "storybook build"
+  },
+  "types": "./dist/cjs/types/index.d.ts",
+  "dependencies": {
+    "@refocus/sdk": "workspace:^",
+    "@radix-ui/react-dialog": "^1.0.4",
+    "@radix-ui/react-dropdown-menu": "^2.0.5",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "react-icons": "^4.9.0",
+    "react-markdown": "^6.0.3",
+    "styled-components": "6.0.0-rc.3"
+  }
+}

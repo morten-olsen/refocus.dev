@@ -1,0 +1,11 @@
+.root {
+  @apply bg-white rounded-lg shadow-lg;
+}
+
+.title {
+  @apply text-2xl font-bold;
+}
+
+.content {
+  @apply p-4;
+}
