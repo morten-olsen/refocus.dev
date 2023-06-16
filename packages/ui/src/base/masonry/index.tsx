@@ -77,6 +77,16 @@ const Masonry = ({ children }: Props) => {
     setColumnWidth(nextColumnWidth);
   }, []);
 
+  const isInitialRender = useMemo(
+    () =>
+      !!(
+        columnWidth === 0 ||
+        heights.length !== elements.length ||
+        heights.find((height) => height === undefined)
+      ),
+    [heights, elements, columnWidth],
+  );
+
   useLayoutEffect(() => {
     if (!ref.current) {
       return;
@@ -91,23 +101,27 @@ const Masonry = ({ children }: Props) => {
   }, [updateSize]);
 
   const debouncedLayout = useDebounce(layout, 10);
+  const debouncedHeights = useDebounce(heights, 10);
 
   return (
     <div ref={ref}>
-      {elements.map((element, index) => (
-        <ItemWrapper
-          animate={{
-            animationDelay: `${index * 0.05}s`,
-            animationDuration: '0.1s',
-            transform: `translate(${debouncedLayout[index]?.x}px, ${debouncedLayout[index]?.y}px)`,
-            width: debouncedLayout[index]?.width,
-            height: heights[index],
-          }}
-          key={index}
-        >
-          {element}
-        </ItemWrapper>
-      ))}
+      {columnWidth > 0 &&
+        elements.map((element, index) => (
+          <ItemWrapper
+            style={{
+              width: debouncedLayout[index]?.width,
+              height: debouncedHeights[index],
+            }}
+            animate={{
+              animationDelay: `${index * 0.05}s`,
+              animationDuration: isInitialRender ? '0s' : '0.1s',
+              transform: `translate(${debouncedLayout[index]?.x}px, ${debouncedLayout[index]?.y}px)`,
+            }}
+            key={index}
+          >
+            {element}
+          </ItemWrapper>
+        ))}
     </div>
   );
 };
