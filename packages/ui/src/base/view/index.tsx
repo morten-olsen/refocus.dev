@@ -1,5 +1,6 @@
 import { styled } from 'styled-components';
 import { Theme } from '../../theme';
+import { motion } from 'framer-motion';
 
 type SizeKey = keyof Theme['space'];
 type BgKey = keyof Theme['colors']['bg'];
@@ -22,7 +23,7 @@ const getSize = (
   return '0';
 };
 
-const View = styled.div<{
+const View = styled(motion.div)<{
   $br?: boolean;
   $bg?: BgKey;
   $m?: SizeKey;

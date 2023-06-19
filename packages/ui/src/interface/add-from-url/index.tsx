@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { Card, Dialog, View } from '../../base';
 import { useGetWidgetsFromUrl } from '@refocus/sdk';
 import { Typography } from '../../typography';
+import { AnimatePresence, motion } from 'framer-motion';
 
 type AddWidgetFromUrlProps = {
   onCreate: (name: string, data: any) => void;
@@ -20,11 +21,15 @@ const Root: React.FC<AddWidgetFromUrlProps> = ({ onCreate, children }) => {
   );
 
   useEffect(() => {
-    const parsed = new URL(url, 'http://example.com');
-    if (parsed.host === 'example.com') {
+    try {
+      const parsed = new URL(url, 'http://example.com');
+      update(parsed);
+      if (parsed.host === 'example.com') {
+        return;
+      }
+    } catch (e) {
       return;
     }
-    update(parsed);
   }, [url, update]);
 
   return (
@@ -45,31 +50,55 @@ const Root: React.FC<AddWidgetFromUrlProps> = ({ onCreate, children }) => {
                 value={url}
               />
             </View>
-            {widgets.map((widget) => (
-              <View key={widget.id}>
-                <Dialog.Close>
-                  <Card
-                    $fr
-                    $items="center"
-                    $gap="md"
-                    $p="md"
-                    onClick={() => handleSave(widget.id, widget.data)}
+            <AnimatePresence>
+              {widgets.length === 0 && url && (
+                <View
+                  $fr
+                  $items="center"
+                  $gap="sm"
+                  initial={{ opacity: 0, y: 20, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: 'auto' }}
+                  exit={{ opacity: 0, y: 20, height: 0 }}
+                >
+                  <Typography variant="body">
+                    No widgets found at this URL
+                  </Typography>
+                </View>
+              )}
+              {widgets.length > 0 &&
+                widgets.map((widget) => (
+                  <motion.div
+                    key={widget.id}
+                    initial={{ opacity: 0, y: 20, height: 0 }}
+                    animate={{ opacity: 1, y: 0, height: 'auto' }}
+                    exit={{ opacity: 0, y: 20, height: 0 }}
                   >
-                    <View>
-                      <Typography variant="header">{widget.icon}</Typography>
-                    </View>
-                    <View>
-                      <Typography variant="title">{widget.name}</Typography>
-                      {widget.description && (
-                        <Typography variant="body">
-                          {widget.description}
-                        </Typography>
-                      )}
-                    </View>
-                  </Card>
-                </Dialog.Close>
-              </View>
-            ))}
+                    <Dialog.Close>
+                      <Card
+                        $fr
+                        $items="center"
+                        $gap="md"
+                        $p="md"
+                        onClick={() => handleSave(widget.id, widget.data)}
+                      >
+                        <View>
+                          <Typography variant="header">
+                            {widget.icon}
+                          </Typography>
+                        </View>
+                        <View>
+                          <Typography variant="title">{widget.name}</Typography>
+                          {widget.description && (
+                            <Typography variant="body">
+                              {widget.description}
+                            </Typography>
+                          )}
+                        </View>
+                      </Card>
+                    </Dialog.Close>
+                  </motion.div>
+                ))}
+            </AnimatePresence>
           </View>
         </Dialog.Content>
       </Dialog.Portal>
