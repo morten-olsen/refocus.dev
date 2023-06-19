@@ -1,10 +1,7 @@
-import { useState, useCallback } from 'react';
-import { Dialog } from '../../base';
-import {
-  WidgetEditor,
-  WidgetProvider,
-  useWidgets,
-} from '@refocus/sdk';
+import { useState, useCallback, useMemo } from 'react';
+import { Card, Dialog, View } from '../../base';
+import { WidgetEditor, WidgetProvider, useWidgets } from '@refocus/sdk';
+import { Typography } from '../../typography';
 
 type CreateWidgetProps = {
   onCreate: (name: string, data: any) => void;
@@ -29,7 +26,23 @@ type WidgetSelectorProps = {
 };
 
 const WidgetSelector: React.FC<WidgetSelectorProps> = ({ onSelect }) => {
+  const [search, setSearch] = useState<string>('');
   const widgets = useWidgets();
+  const editableWidgets = useMemo(
+    () => widgets.filter((widget) => widget.edit),
+    [widgets],
+  );
+  const searchResults = useMemo(
+    () =>
+      !search
+        ? editableWidgets
+        : editableWidgets.filter((widget) =>
+            widget.name
+              .toLocaleLowerCase()
+              .includes(search.toLocaleLowerCase()),
+          ),
+    [search, editableWidgets],
+  );
 
   const handleSelect = useCallback(
     (id: string) => {
@@ -39,11 +52,33 @@ const WidgetSelector: React.FC<WidgetSelectorProps> = ({ onSelect }) => {
   );
 
   return (
-    <div>
-      {widgets.map((widget) => (
-        <button key={widget.id} onClick={() => handleSelect(widget.id)}>
-          {widget.name}
-        </button>
+    <div style={{ height: '50vh' }}>
+      <Typography
+        as="input"
+        placeholder="Search"
+        value={search}
+        $u
+        onChange={(e) => setSearch(e.target.value)}
+      />
+      {searchResults.map((widget) => (
+        <Card
+          $fr
+          $items="center"
+          $gap="md"
+          $p="md"
+          key={widget.id}
+          onClick={() => handleSelect(widget.id)}
+        >
+          <View>
+            <Typography variant="header">{widget.icon}</Typography>
+          </View>
+          <View>
+            <Typography variant="title">{widget.name}</Typography>
+            {widget.description && (
+              <Typography variant="body">{widget.description}</Typography>
+            )}
+          </View>
+        </Card>
       ))}
     </div>
   );
@@ -51,16 +86,23 @@ const WidgetSelector: React.FC<WidgetSelectorProps> = ({ onSelect }) => {
 
 const Root: React.FC<CreateWidgetProps> = ({ onCreate, children }) => {
   const [id, setId] = useState<string>('');
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleSave = useCallback(
     (data: any) => {
       onCreate(id, data);
+      setOpen(false);
     },
     [id, onCreate],
   );
 
+  const handleOpen = useCallback((state: boolean) => {
+    setOpen(state);
+    setId('');
+  }, []);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={handleOpen}>
       {children}
       <Dialog.Portal>
         <Dialog.Overlay />

@@ -10,10 +10,12 @@ const WidgetView = withLinear<LinearIssueProps>(({ id }) => {
     const issue = await client.issue(id);
     const assignee = await issue.assignee;
     const creator = await issue.creator;
+    const state = await issue.state;
     return {
       issue,
       assignee,
       creator,
+      state,
     };
   });
 
@@ -34,6 +36,9 @@ const WidgetView = withLinear<LinearIssueProps>(({ id }) => {
       onClick={() => window.open(data?.issue.url, '_blank')}
     >
       <View>
+        <Typography variant="tiny">
+          {data?.state?.name} - {data?.issue.priorityLabel}
+        </Typography>
         <Typography variant="title">{data?.issue?.title}</Typography>
         <Typography variant="tiny">
           {data?.issue.description?.substring(0, 100)}

@@ -47,7 +47,7 @@ const WidgetProvider = ({
   const addGlobalNotification = useNotificationAdd();
   const dissmissGlobalNotification = useNotificationDismiss();
   const notifications = useMemo(() => {
-    return globalNotifications.filter((n) => n.view !== ref.current);
+    return globalNotifications.filter((n) => n.view === ref.current);
   }, [globalNotifications]);
 
   const addNotification = useCallback(

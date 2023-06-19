@@ -8,3 +8,5 @@ export * from './list';
 export * from './dropdown';
 export * from './button';
 export * from './masonry';
+export * from './code-editor';
+export * from './popover';

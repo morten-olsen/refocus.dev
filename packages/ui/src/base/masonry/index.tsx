@@ -15,6 +15,10 @@ type Props = {
   children: React.ReactNode;
 };
 
+const Wrapper = styled.div`
+  position: relative;
+`;
+
 const maxColumnWidth = 400;
 const gutter = 16;
 
@@ -104,7 +108,7 @@ const Masonry = ({ children }: Props) => {
   const debouncedHeights = useDebounce(heights, 10);
 
   return (
-    <div ref={ref}>
+    <Wrapper ref={ref}>
       {columnWidth > 0 &&
         elements.map((element, index) => (
           <ItemWrapper
@@ -122,7 +126,7 @@ const Masonry = ({ children }: Props) => {
             {element}
           </ItemWrapper>
         ))}
-    </div>
+    </Wrapper>
   );
 };
 

@@ -8,5 +8,6 @@ export {
   useRemoveBoard,
   useSelectBoard,
   useUpdateWidget,
+  useSetBoardName,
 } from './hooks';
 export * from './types';

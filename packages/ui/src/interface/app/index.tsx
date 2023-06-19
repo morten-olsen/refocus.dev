@@ -4,15 +4,35 @@ import {
   useRemoveBoard,
   useSelectBoard,
   useSelectedBoard,
+  useSetBoardName,
 } from '@refocus/sdk';
 import { IoAddCircleOutline } from 'react-icons/io5';
 import styled from 'styled-components';
 import { View } from '../../base';
 import { Board } from '../board';
 import { Tabs } from '../../base/tabs';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
-const NotificationBar = styled(View)``;
+const Wrapper = styled(View)`
+  height: 100vh;
+`;
+
+const Title: React.FC<{ id: string }> = ({ id }) => {
+  const boards = useBoards();
+  const board = useMemo(() => boards[id], [boards, id]);
+  const setName = useSetBoardName();
+  return (
+    <View
+      $fr
+      $items="center"
+      $gap="sm"
+      $u
+      as="input"
+      value={board.name || ''}
+      onChange={(e) => setName(id, e.target.value)}
+    />
+  );
+};
 
 const App: React.FC = () => {
   const boards = useBoards();
@@ -30,13 +50,13 @@ const App: React.FC = () => {
   }, [addBoardAction]);
 
   return (
-    <View>
+    <Wrapper $fc>
       <View $f={1}>
         <Tabs value={selected} onValueChange={selectBoard}>
           <Tabs.List>
             {Object.entries(boards).map(([id, board]) => (
               <Tabs.Trigger key={id} value={id}>
-                {board.name}
+                <Title id={id} />
                 <Tabs.Close onClick={() => removeBoard(id)} />
               </Tabs.Trigger>
             ))}
@@ -58,8 +78,7 @@ const App: React.FC = () => {
           ))}
         </Tabs>
       </View>
-      <NotificationBar></NotificationBar>
-    </View>
+    </Wrapper>
   );
 };
 

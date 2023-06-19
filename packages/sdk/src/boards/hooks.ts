@@ -65,6 +65,14 @@ const useUpdateWidget = () => {
   return context.updateWidget;
 };
 
+const useSetBoardName = () => {
+  const context = useContext(BoardsContext);
+  if (!context) {
+    throw new Error('useSetBoardName must be used within a BoardsProvider');
+  }
+  return context.setName;
+};
+
 export {
   useBoards,
   useSelectedBoard,
@@ -74,4 +82,5 @@ export {
   useRemoveBoard,
   useSelectBoard,
   useUpdateWidget,
+  useSetBoardName,
 };

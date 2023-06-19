@@ -12,6 +12,7 @@ type BoardsContextValue = {
   selected?: string;
   boards: Boards;
   addBoard: (name: string) => void;
+  setName: (id: string, name: string) => void;
   selectBoard: (id: string) => void;
   removeBoard: (id: string) => void;
   addWidget: (boardId: string, type: string, data: string) => void;
@@ -42,6 +43,16 @@ const BoardsProvider: React.FC<BoardsProviderProps> = ({
       [id]: {
         name,
         widgets: {},
+      },
+    }));
+  }, []);
+
+  const setName = useCallback((id: string, name: string) => {
+    setBoards((currentBoards) => ({
+      ...currentBoards,
+      [id]: {
+        ...currentBoards[id],
+        name,
       },
     }));
   }, []);
@@ -116,6 +127,7 @@ const BoardsProvider: React.FC<BoardsProviderProps> = ({
       addBoard,
       removeBoard,
       addWidget,
+      setName,
       removeWidget,
       selectBoard,
       updateWidget,
@@ -126,6 +138,7 @@ const BoardsProvider: React.FC<BoardsProviderProps> = ({
       addBoard,
       removeBoard,
       addWidget,
+      setName,
       removeWidget,
       selectBoard,
       updateWidget,

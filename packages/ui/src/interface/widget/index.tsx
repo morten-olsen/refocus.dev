@@ -13,10 +13,12 @@ import { MdKeyboardArrowUp } from 'react-icons/md';
 import { motion } from 'framer-motion';
 import { VscTrash } from 'react-icons/vsc';
 import { CgMoreO, CgSync } from 'react-icons/cg';
+import { GoScreenFull } from 'react-icons/go';
 import { Dialog, View } from '../../base';
 import { DropdownMenu } from '../../base';
 import { useCallback, useMemo, useState } from 'react';
 import { Typography } from '../../typography';
+import { NotificationView } from './notification';
 
 type WidgetProps = {
   id: string;
@@ -115,7 +117,22 @@ const Widget: React.FC<WidgetProps> = ({
         </motion.div>
         <Title />
         <Spacer />
+        <NotificationView />
         <Update />
+        <Dialog>
+          <Dialog.Trigger>
+            <View $p="sm">
+              <GoScreenFull />
+            </View>
+          </Dialog.Trigger>
+          <Dialog.Portal>
+            <Dialog.Overlay />
+            <Dialog.Content maxWidth="90vw" height="90vh">
+              <Dialog.CloseButton />
+              <WidgetView />
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog>
         {hasMenu && (
           <DropdownMenu>
             <DropdownMenu.Trigger>

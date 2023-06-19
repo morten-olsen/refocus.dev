@@ -16,7 +16,10 @@ const Overlay = styled(DialogPrimitives.Overlay)`
 
 const Portal = styled(DialogPrimitives.Portal)``;
 
-const Content = styled(DialogPrimitives.Content)`
+const Content = styled(DialogPrimitives.Content)<{
+  maxWidth?: string;
+  height?: string;
+}>`
   z-index: 1000;
   overflow-y: auto;
   background-color: ${({ theme }) => theme.colors.bg.base100};
@@ -28,9 +31,10 @@ const Content = styled(DialogPrimitives.Content)`
   left: 50%;
   transform: translate(-50%, -50%);
   width: 90vw;
-  max-width: 450px;
+  max-width: ${({ maxWidth }) => maxWidth || '600px'};
   max-height: 85vh;
   padding: 25px;
+  height: ${({ height }) => height || 'auto'};
   box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.bg.highlight};
 `;
 
