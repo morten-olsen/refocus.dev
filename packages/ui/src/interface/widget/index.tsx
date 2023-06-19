@@ -19,6 +19,7 @@ import { DropdownMenu } from '../../base';
 import { useCallback, useMemo, useState } from 'react';
 import { Typography } from '../../typography';
 import { NotificationView } from './notification';
+import { ErrorBoundary } from '../error';
 
 type WidgetProps = {
   id: string;
@@ -129,7 +130,9 @@ const Widget: React.FC<WidgetProps> = ({
             <Dialog.Overlay />
             <Dialog.Content maxWidth="90vw" height="90vh">
               <Dialog.CloseButton />
-              <WidgetView />
+              <ErrorBoundary>
+                <WidgetView />
+              </ErrorBoundary>
             </Dialog.Content>
           </Dialog.Portal>
         </Dialog>
@@ -169,7 +172,9 @@ const Widget: React.FC<WidgetProps> = ({
       >
         <Wrapper className={className} $fr>
           <WidgetWrapper $f={1}>
-            <WidgetView />
+            <ErrorBoundary>
+              <WidgetView />
+            </ErrorBoundary>
           </WidgetWrapper>
         </Wrapper>
       </motion.div>
@@ -179,7 +184,9 @@ const Widget: React.FC<WidgetProps> = ({
           <Dialog.Content>
             <Dialog.Title>Edit Widget</Dialog.Title>
             <Dialog.Description>
-              <WidgetEditor onSave={onSave} />
+              <ErrorBoundary>
+                <WidgetEditor onSave={onSave} />
+              </ErrorBoundary>
             </Dialog.Description>
           </Dialog.Content>
         </Dialog.Portal>

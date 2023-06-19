@@ -4,3 +4,4 @@ export * from './notifications';
 export * from './widget';
 export * from './board';
 export * from './app';
+export * from './error';

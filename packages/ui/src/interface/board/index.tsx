@@ -65,7 +65,7 @@ const Board: React.FC<BoardProps> = ({ board, id }) => {
           ))}
         </Masonry>
       </View>
-    </View>
+    </Wrapper>
   );
 };
 
