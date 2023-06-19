@@ -1,4 +1,4 @@
-import { createContext, useCallback, useMemo, useRef } from 'react';
+import { createContext, useCallback, useMemo, useRef, useState } from 'react';
 import {
   Notification as BaseNotification,
   useNotificationAdd,
@@ -14,7 +14,15 @@ type WidgetContextValue = {
   dismissNotification: (id: string) => void;
   notifications: Notification[];
   setData?: (data: any) => void;
+  addUpdater: (updater: Updater) => () => void;
+  updating: boolean;
+  hasUpdater: boolean;
+  name: string;
+  setName: (name: string) => void;
+  updateWidget: () => Promise<void>;
 };
+
+type Updater = () => Promise<void> | void;
 
 type WidgetProviderProps = {
   id: string;
@@ -32,6 +40,9 @@ const WidgetProvider = ({
   children,
 }: WidgetProviderProps) => {
   const ref = useRef(Symbol('WidgetRender'));
+  const [updating, setUpdating] = useState(false);
+  const [name, setName] = useState('');
+  const [updaters, setUpdaters] = useState<Updater[]>([]);
   const globalNotifications = useNotifications();
   const addGlobalNotification = useNotificationAdd();
   const dissmissGlobalNotification = useNotificationDismiss();
@@ -46,12 +57,34 @@ const WidgetProvider = ({
     [addGlobalNotification],
   );
 
+  const addUpdater = useCallback(
+    (updater: Updater) => {
+      setUpdaters((prev) => [...prev, updater]);
+      return () => {
+        setUpdaters((prev) => prev.filter((u) => u !== updater));
+      };
+    },
+    [setUpdaters],
+  );
+
   const dismissNotification = useCallback(
     (dismissId: string) => {
       dissmissGlobalNotification(dismissId);
     },
     [dissmissGlobalNotification],
   );
+
+  const updateWidget = useCallback(async () => {
+    setUpdating(true);
+    for (const updater of updaters) {
+      try {
+        await updater();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    setUpdating(false);
+  }, [updaters]);
 
   const value = useMemo(
     () => ({
@@ -61,8 +94,27 @@ const WidgetProvider = ({
       id,
       data,
       setData,
+      name,
+      setName,
+      addUpdater,
+      updateWidget,
+      updating,
+      hasUpdater: updaters.length > 0,
     }),
-    [addNotification, notifications, id, data, setData, dismissNotification],
+    [
+      addNotification,
+      notifications,
+      id,
+      data,
+      setData,
+      updating,
+      dismissNotification,
+      name,
+      setName,
+      addUpdater,
+      updateWidget,
+      updaters.length,
+    ],
   );
 
   return (

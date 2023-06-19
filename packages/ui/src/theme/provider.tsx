@@ -6,7 +6,6 @@ type UIProviderProps = {
 };
 // @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap');
 const GlobalStyle = createGlobalStyle`
-
   * {
     box-sizing: border-box;
     overflow-wrap: break-word;
@@ -24,6 +23,7 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     background-color: ${({ theme }) => theme.colors.bg.base};
+    background-image: linear-gradient(to right, rgb(38, 39, 54), rgb(25, 26, 35));
     color: ${({ theme }) => theme.colors.text.base};
     margin: 0;
     padding: 0;

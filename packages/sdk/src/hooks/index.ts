@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { useUpdateEffect } from '../widgets';
 
 type AutoUpdateOptions<TReturn> = {
   interval: number;
@@ -35,6 +36,10 @@ const useAutoUpdate = <T>(
       clearTimeout(intervalId);
     };
   }, [interval, actionWithCallback, callbackWithCallback]);
+
+  useUpdateEffect(async () => {
+    await update();
+  }, [update]);
 
   return update;
 };

@@ -16,10 +16,7 @@ type BoardProps = {
 };
 
 const ItemWrapper = styled(View)`
-  overflow-y: auto;
-  max-height: 500px;
   max-width: 100%;
-  box-shadow: 0 0 4px 0px ${({ theme }) => theme.colors.bg.highlight};
   border-radius: ${({ theme }) => theme.radii.md}px;
 `;
 

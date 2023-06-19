@@ -2,6 +2,7 @@ import {
   useAddWidgetNotification,
   useAutoUpdate,
   useLinearQuery,
+  useName,
   withLinear,
 } from '@refocus/sdk';
 import { Chat, Linear, List, View } from '@refocus/ui';
@@ -13,9 +14,11 @@ type LinearIssueProps = {
 
 const WidgetView = withLinear<LinearIssueProps>(({ id }) => {
   const addNotification = useAddWidgetNotification();
+  const [, setName] = useName();
   const { data, fetch } = useLinearQuery(async (client) => {
     const issue = await client.issue(id);
     const comments = await issue.comments();
+    setName(id);
     return comments.nodes;
   });
 

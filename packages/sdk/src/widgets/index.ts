@@ -10,6 +10,11 @@ export {
   useWidgetId,
   useWidgetData,
   useSetWidgetData,
+  useName,
+  useUpdateEffect,
+  useReloadWidget,
+  useHasUpdate,
+  useIsUpdating,
 } from './hooks';
 export { WidgetProvider } from './widget-context';
 export { WidgetView } from './view';

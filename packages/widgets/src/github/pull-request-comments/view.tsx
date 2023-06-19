@@ -3,6 +3,7 @@ import {
   useAutoUpdate,
   useGithubQuery,
   withGithub,
+  useName,
 } from '@refocus/sdk';
 import { Chat, Github, List } from '@refocus/ui';
 import { Props } from './schema';
@@ -16,12 +17,14 @@ type QueryData = {
 
 const View = withGithub<Props>(({ owner, repo, pr }) => {
   const addNotification = useAddWidgetNotification();
+  const [, setName] = useName();
   const { data, fetch } = useGithubQuery(async (client, params: QueryData) => {
     const response = await client.rest.pulls.listReviewComments({
       owner: params.owner,
       repo: params.repo,
       pull_number: params.pr,
     });
+    setName(`${params.owner}/${params.repo} #${params.pr}`);
     return response.data.slice(0, 5);
   });
 

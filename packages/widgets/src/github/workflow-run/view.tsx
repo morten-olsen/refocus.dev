@@ -8,29 +8,29 @@ import { Props } from './schema';
 import { Github } from '@refocus/ui';
 
 type QueryData = {
+  id: number;
   owner: string;
   repo: string;
-  pr: number;
 };
 
-const View = withGithub<Props>(({ owner, repo, pr }) => {
+const WidgetView = withGithub<Props>(({ owner, repo, id }) => {
   const [, setName] = useName();
   const { data, fetch } = useGithubQuery(async (client, params: QueryData) => {
-    const response = await client.rest.pulls.get({
+    const response = await client.rest.actions.getWorkflowRun({
       owner: params.owner,
       repo: params.repo,
-      pull_number: params.pr,
+      run_id: params.id,
     });
-    setName(`${params.owner}/${params.repo} #${params.pr}`);
+    setName(`${response.data.repository.full_name} ${response.data.name}`);
     return response.data;
   });
 
   useAutoUpdate(
     {
       interval: 1000 * 60 * 5,
-      action: async () => fetch({ owner, repo, pr }),
+      action: async () => fetch({ owner, repo, id }),
     },
-    [owner, repo, pr],
+    [owner, repo, id],
   );
 
   if (!data) {
@@ -38,13 +38,16 @@ const View = withGithub<Props>(({ owner, repo, pr }) => {
   }
 
   return (
-    <Github.PullRequest
-      pullRequest={data}
+    <Github.WorkflowRun
+      workflowRun={data}
       onPress={() =>
-        window.open(`https://github.com/${owner}/${repo}/pull/${pr}`, '_blank')
+        window.open(
+          `https://github.com/${owner}/${repo}/actions/runs/${id}`,
+          '_blank',
+        )
       }
     />
   );
 }, Github.NotLoggedIn);
 
-export { View };
+export { WidgetView as View };

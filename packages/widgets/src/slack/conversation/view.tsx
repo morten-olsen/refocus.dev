@@ -1,9 +1,11 @@
 import {
   useAddWidgetNotification,
   useAutoUpdate,
+  useName,
   useSlackQuery,
   withSlack,
 } from '@refocus/sdk';
+import styled from 'styled-components';
 import { Props } from './schema';
 import { Message } from './message/view';
 import { useState } from 'react';
@@ -13,7 +15,24 @@ type PostMessageOptions = {
   message: string;
 };
 
+const MessageList = styled(View)`
+  transform: scaleY(-1);
+  flex: 1;
+  overflow-y: auto;
+  flex-grow: 1;
+  flex-shrink: 1;
+
+  & > * {
+    transform: scaleY(-1);
+  }
+`;
+
+const Wrapper = styled(View)`
+  max-height: 100%;
+  overflow: hidden;
+`;
 const WidgetView = withSlack<Props>(({ conversationId }) => {
+  const [, setName] = useName();
   const addNotification = useAddWidgetNotification();
   const [message, setMessage] = useState('');
   const { fetch, data } = useSlackQuery(async (client, props: Props) => {
@@ -27,6 +46,7 @@ const WidgetView = withSlack<Props>(({ conversationId }) => {
     const response = await client.send('conversations.info', {
       channel: props.conversationId,
     });
+    setName(response.channel!.name || 'Direct message');
     return response.channel!;
   });
 
@@ -39,7 +59,7 @@ const WidgetView = withSlack<Props>(({ conversationId }) => {
     },
   );
 
-  const update = useAutoUpdate(
+  useAutoUpdate(
     {
       action: async () => {
         await info.fetch({ conversationId });
@@ -68,17 +88,8 @@ const WidgetView = withSlack<Props>(({ conversationId }) => {
   );
 
   return (
-    <View $p="md">
-      <button onClick={update}>Update</button>
-      <Typography variant="header">
-        {info.data?.name || 'Direct message'}
-      </Typography>
-      <Chat.Compose
-        value={message}
-        onValueChange={setMessage}
-        onSend={() => post({ message })}
-      />
-      <List>
+    <Wrapper $p="sm" $fc $gap="sm">
+      <MessageList $gap="md" $fc>
         {data?.map((message) => (
           <Message
             key={message.ts}
@@ -86,8 +97,13 @@ const WidgetView = withSlack<Props>(({ conversationId }) => {
             userId={message.user}
           />
         ))}
-      </List>
-    </View>
+      </MessageList>
+      <Chat.Compose
+        value={message}
+        onValueChange={setMessage}
+        onSend={() => post({ message })}
+      />
+    </Wrapper>
   );
 }, Slack.NotLoggedIn);
 

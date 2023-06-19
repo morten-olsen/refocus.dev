@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { WidgetsContext } from './context';
 import { WidgetContext } from './widget-context';
 
@@ -111,9 +111,58 @@ const useWidgetId = () => {
   return context.id;
 };
 
+const useName = () => {
+  const context = useContext(WidgetContext);
+  if (!context) {
+    throw new Error('useName must be used within a WidgetProvider');
+  }
+  return [context.name, context.setName] as const;
+};
+
+const useHasUpdate = () => {
+  const context = useContext(WidgetContext);
+  if (!context) {
+    throw new Error('useHasUpdate must be used within a WidgetProvider');
+  }
+  return context.hasUpdater;
+};
+
+const useUpdateEffect = (fn: () => Promise<void>, deps: any[]) => {
+  const context = useContext(WidgetContext);
+  if (!context) {
+    throw new Error('useUpdateEffect must be used within a WidgetProvider');
+  }
+  useEffect(() => {
+    const unsubscribe = context.addUpdater(() => fn());
+    return () => {
+      unsubscribe();
+    };
+  }, [context.addUpdater, ...deps]);
+};
+
+const useReloadWidget = () => {
+  const context = useContext(WidgetContext);
+  if (!context) {
+    throw new Error('useUpdateWidget must be used within a WidgetProvider');
+  }
+  return context.updateWidget;
+};
+
+const useIsUpdating = () => {
+  const context = useContext(WidgetContext);
+  if (!context) {
+    throw new Error('useIsUpdating must be used within a WidgetProvider');
+  }
+  return context.updating;
+};
+
 export {
   useWidget,
   useWidgets,
+  useName,
+  useUpdateEffect,
+  useHasUpdate,
+  useReloadWidget,
   useGetWidgetsFromUrl,
   useWidgetNotifications,
   useDismissWidgetNotification,
@@ -121,4 +170,5 @@ export {
   useWidgetData,
   useSetWidgetData,
   useWidgetId,
+  useIsUpdating,
 };

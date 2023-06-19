@@ -1,4 +1,5 @@
 import * as DropdownMenuPrimitives from '@radix-ui/react-dropdown-menu';
+import { motion } from 'framer-motion';
 import { styled, css } from 'styled-components';
 
 const RightSlot = styled.div`
@@ -61,6 +62,17 @@ const Trigger = styled(DropdownMenuPrimitives.Trigger)`
 `;
 
 const Portal = styled(DropdownMenuPrimitives.Portal)``;
+
+const OverlayComponent = styled(motion.div)`
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+`;
+
+const Overlay: React.FC = () => (
+  <OverlayComponent initial={{ opacity: 0 }} animate={{ opacity: 1 }} />
+);
 
 const Item = styled(DropdownMenuPrimitives.Item)`
   ${item}
@@ -147,6 +159,7 @@ const DropdownMenu = Object.assign(Root, {
   Item,
   Sub,
   SubTrigger,
+  Overlay,
   SubContent,
   Separator,
   CheckboxItem,

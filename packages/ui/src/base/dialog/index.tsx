@@ -11,6 +11,7 @@ const Overlay = styled(DialogPrimitives.Overlay)`
   position: fixed;
   inset: 0;
   backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.5);
 `;
 
 const Portal = styled(DialogPrimitives.Portal)``;
@@ -30,6 +31,7 @@ const Content = styled(DialogPrimitives.Content)`
   max-width: 450px;
   max-height: 85vh;
   padding: 25px;
+  box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.bg.highlight};
 `;
 
 const Title = styled(DialogPrimitives.Title)`
