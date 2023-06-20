@@ -1,5 +1,5 @@
 import { Widget } from '@refocus/sdk';
-import linearMyIssuesWidget from './my-issues/index.widget';
+import linearMyIssuesWidget from './my-issues/index';
 import linearIssue from './issue';
 import linearIssueWithComments from './issue-with-comments';
 

@@ -29,6 +29,11 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     ${styles.body}
   }
+
+  a {
+    color: ${({ theme }) => theme.colors.bg.highlight};
+    text-decoration: none;
+  }
 `;
 
 const UIProvider: React.FC<UIProviderProps> = ({ children }) => {

@@ -7,13 +7,20 @@ import {
 } from '@refocus/sdk';
 import styled from 'styled-components';
 import { Props } from './schema';
-import { Message } from './message/view';
+import { ConversationsHistoryResponse } from '@slack/web-api';
 import { useState } from 'react';
-import { Chat, List, Slack, Typography, View } from '@refocus/ui';
+import { Chat, Slack, Typography, View } from '@refocus/ui';
+import { User } from '../block/elements/user';
+import { Message } from './message/view';
 
 type PostMessageOptions = {
   message: string;
 };
+
+type MessageType = Exclude<
+  ConversationsHistoryResponse['messages'],
+  undefined
+>[0];
 
 const MessageList = styled(View)`
   transform: scaleY(-1);
@@ -31,16 +38,24 @@ const Wrapper = styled(View)`
   max-height: 100%;
   overflow: hidden;
 `;
-const WidgetView = withSlack<Props>(({ conversationId }) => {
+const WidgetView = withSlack<Props>(({ conversationId, ts }) => {
   const [, setName] = useName();
   const addNotification = useAddWidgetNotification();
   const [message, setMessage] = useState('');
   const { fetch, data } = useSlackQuery(async (client, props: Props) => {
-    const response = await client.send('conversations.history', {
-      channel: props.conversationId,
-      limit: 5,
-    });
-    return response.messages!;
+    if (props.ts) {
+      const response = await client.send('conversations.replies', {
+        channel: props.conversationId,
+        ts: props.ts,
+      });
+      return response.messages! as MessageType[];
+    } else {
+      const response = await client.send('conversations.history', {
+        channel: props.conversationId,
+        limit: 5,
+      });
+      return response.messages! as MessageType[];
+    }
   });
   const info = useSlackQuery(async (client, props: Props) => {
     const response = await client.send('conversations.info', {
@@ -62,9 +77,10 @@ const WidgetView = withSlack<Props>(({ conversationId }) => {
   useAutoUpdate(
     {
       action: async () => {
-        await info.fetch({ conversationId });
+        await info.fetch({ conversationId, ts });
         return fetch({
           conversationId,
+          ts,
         });
       },
       interval: 1000 * 60,
@@ -84,19 +100,28 @@ const WidgetView = withSlack<Props>(({ conversationId }) => {
         }
       },
     },
-    [conversationId],
+    [conversationId, ts],
   );
 
   return (
     <Wrapper $p="sm" $fc $gap="sm">
       <MessageList $gap="md" $fc>
-        {data?.map((message) => (
-          <Message
-            key={message.ts}
-            text={message.text || '[No text|'}
-            userId={message.user}
-          />
-        ))}
+        {data?.map((message) => {
+          if ('subtype' in message && message.subtype === 'channel_join') {
+            return (
+              <Typography key={message.ts}>
+                <User id={message.user!} /> joined the channel
+              </Typography>
+            );
+          }
+          return (
+            <Message
+              key={message.ts}
+              {...message}
+              conversationId={conversationId}
+            />
+          );
+        })}
       </MessageList>
       <Chat.Compose
         value={message}

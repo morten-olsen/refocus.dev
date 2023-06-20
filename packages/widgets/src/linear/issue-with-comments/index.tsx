@@ -2,6 +2,7 @@ import { Widget } from '@refocus/sdk';
 import { SiLinear } from 'react-icons/si';
 import { schema } from './schema';
 import { WidgetView } from './view';
+import { Edit } from './edit';
 
 // https://linear.app/zeronorth/issue/VOY-93/save-a-new-cp-definition
 
@@ -23,6 +24,7 @@ const widget: Widget<typeof schema> = {
   },
   schema,
   component: WidgetView,
+  edit: Edit,
 };
 
 export default widget;

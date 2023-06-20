@@ -2,6 +2,7 @@ import { Widget } from '@refocus/sdk';
 import { schema } from './schema';
 import { WidgetView } from './view';
 import { SiSlack } from 'react-icons/si';
+import { Edit } from './edit';
 
 // https://refocus.slack.com/archives/D05C97E7GB1I
 
@@ -23,6 +24,7 @@ const widget: Widget<typeof schema> = {
   },
   schema,
   component: WidgetView,
+  edit: Edit,
 };
 
 export default widget;

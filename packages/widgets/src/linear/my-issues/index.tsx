@@ -1,33 +1,18 @@
-import { useLinearQuery, withLinear } from '@refocus/sdk';
-import { Panel, Linear } from '@refocus/ui';
-import { useEffect } from 'react';
+import { Type } from '@sinclair/typebox';
+import { Widget } from '@refocus/sdk';
+import { SiLinear } from 'react-icons/si';
+import { View } from './view';
+import { Edit } from './edit';
 
-const LinearMyIssues = withLinear(() => {
-  const issues = useLinearQuery(async (client) => {
-    const me = await client.viewer;
-    const issues = await me.assignedIssues({
-      filter: {
-        completedAt: {
-          null: true,
-        },
-      },
-    });
-    return issues.nodes;
-  });
+const schema = Type.Object({});
 
-  useEffect(() => {
-    issues.fetch();
-  }, []);
+const linearMyIssuesWidget: Widget<typeof schema> = {
+  name: 'Linear My Issues',
+  id: 'linear.my-issues',
+  icon: <SiLinear />,
+  schema,
+  component: View,
+  edit: Edit,
+};
 
-  return (
-    <Panel title="My issue">
-      <ul>
-        {issues.data?.map((issue) => (
-          <Linear.Issue key={issue.id} issue={issue} />
-        ))}
-      </ul>
-    </Panel>
-  );
-}, Linear.NotLoggedIn);
-
-export { LinearMyIssues };
+export default linearMyIssuesWidget;

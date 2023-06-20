@@ -22,7 +22,6 @@ const WidgetView = withGithub<Props>(({ owner, repo }) => {
     setName(`${params.owner}/${params.repo} workflow runs`);
     return response.data.workflow_runs.slice(0, 5);
   });
-  console.log(data);
 
   useAutoUpdate(
     {

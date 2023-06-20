@@ -10,3 +10,4 @@ export * from './button';
 export * from './masonry';
 export * from './code-editor';
 export * from './popover';
+export * from './form';

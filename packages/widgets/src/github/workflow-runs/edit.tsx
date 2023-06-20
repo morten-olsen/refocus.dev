@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Props } from './schema';
+import { Button, Form } from '@refocus/ui';
 
 type EditorProps = {
   value?: Props;
@@ -18,19 +19,17 @@ const Edit: React.FC<EditorProps> = ({ value, save }) => {
   }, [owner, repo, save]);
 
   return (
-    <div>
-      <input
-        placeholder="Owner"
-        value={owner}
-        onChange={(e) => setOwner(e.target.value)}
-      />
-      <input
-        placeholder="Repo"
-        value={repo}
-        onChange={(e) => setRepo(e.target.value)}
-      />
-      <button onClick={handleSave}>Save</button>
-    </div>
+    <Form>
+      <Form.Field label="Owner">
+        <Form.Input value={owner} onChange={(e) => setOwner(e.target.value)} />
+      </Form.Field>
+      <Form.Field label="Repo">
+        <Form.Input value={repo} onChange={(e) => setRepo(e.target.value)} />
+      </Form.Field>
+      <Form.Buttons>
+        <Button onClick={handleSave} title="Save" />
+      </Form.Buttons>
+    </Form>
   );
 };
 

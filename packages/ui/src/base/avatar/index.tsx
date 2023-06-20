@@ -5,16 +5,18 @@ type AvatarProps = {
   url?: string;
   name?: string;
   decal?: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg';
+  size?: keyof typeof sizes;
 };
 
 const sizes = {
+  xs: 20,
   sm: 28,
   md: 50,
   lg: 75,
 };
 
 const fontSizes = {
+  xs: 8,
   sm: 10,
   md: 24,
   lg: 32,
