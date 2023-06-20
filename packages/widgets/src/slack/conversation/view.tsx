@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import { Props } from './schema';
 import { ConversationsHistoryResponse } from '@slack/web-api';
 import { useState } from 'react';
-import { Chat, Slack, Typography, View } from '@refocus/ui';
+import { Chat, Loader, Slack, Typography, View } from '@refocus/ui';
 import { User } from '../block/elements/user';
 import { Message } from './message/view';
 
@@ -42,21 +42,23 @@ const WidgetView = withSlack<Props>(({ conversationId, ts }) => {
   const [, setName] = useName();
   const addNotification = useAddWidgetNotification();
   const [message, setMessage] = useState('');
-  const { fetch, data } = useSlackQuery(async (client, props: Props) => {
-    if (props.ts) {
-      const response = await client.send('conversations.replies', {
-        channel: props.conversationId,
-        ts: props.ts,
-      });
-      return response.messages! as MessageType[];
-    } else {
-      const response = await client.send('conversations.history', {
-        channel: props.conversationId,
-        limit: 5,
-      });
-      return response.messages! as MessageType[];
-    }
-  });
+  const { fetch, data, loading } = useSlackQuery(
+    async (client, props: Props) => {
+      if (props.ts) {
+        const response = await client.send('conversations.replies', {
+          channel: props.conversationId,
+          ts: props.ts,
+        });
+        return response.messages!.reverse() as MessageType[];
+      } else {
+        const response = await client.send('conversations.history', {
+          channel: props.conversationId,
+          limit: 5,
+        });
+        return response.messages! as MessageType[];
+      }
+    },
+  );
   const info = useSlackQuery(async (client, props: Props) => {
     const response = await client.send('conversations.info', {
       channel: props.conversationId,
@@ -65,16 +67,7 @@ const WidgetView = withSlack<Props>(({ conversationId, ts }) => {
     return response.channel!;
   });
 
-  const { fetch: post } = useSlackQuery(
-    async (client, props: PostMessageOptions) => {
-      client.send('chat.postMessage', {
-        text: props.message,
-        channel: conversationId,
-      });
-    },
-  );
-
-  useAutoUpdate(
+  const update = useAutoUpdate(
     {
       action: async () => {
         await info.fetch({ conversationId, ts });
@@ -103,10 +96,22 @@ const WidgetView = withSlack<Props>(({ conversationId, ts }) => {
     [conversationId, ts],
   );
 
+  const { fetch: post } = useSlackQuery(
+    async (client, props: PostMessageOptions) => {
+      await client.send('chat.postMessage', {
+        text: props.message,
+        channel: conversationId,
+      });
+      setMessage('');
+      await update();
+    },
+  );
+
   return (
     <Wrapper $p="sm" $fc $gap="sm">
+      {loading && <Loader />}
       <MessageList $gap="md" $fc>
-        {data?.map((message) => {
+        {data?.map((message, index) => {
           if ('subtype' in message && message.subtype === 'channel_join') {
             return (
               <Typography key={message.ts}>
@@ -116,7 +121,7 @@ const WidgetView = withSlack<Props>(({ conversationId, ts }) => {
           }
           return (
             <Message
-              key={message.ts}
+              key={message.ts || index}
               {...message}
               conversationId={conversationId}
             />

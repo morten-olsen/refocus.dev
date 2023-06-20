@@ -25,7 +25,7 @@ const renderElement = (item: Renderable) => {
         </a>
       );
     case 'user':
-      return <User id={item.user_id} />;
+      return <User key={item.user_id} id={item.user_id} />;
     case 'emoji':
       return unicodeToEmoji(item.unicode);
     case 'rich_text_list':

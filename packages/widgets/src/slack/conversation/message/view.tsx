@@ -5,7 +5,6 @@ import { render } from '../../block/render';
 import { useMemo } from 'react';
 import { WidgetProvider, WidgetView } from '@refocus/sdk';
 import { styled } from 'styled-components';
-import { User } from '../../block/elements/user';
 import { UserAvatar } from '../../block/elements/user-avatar';
 
 type Message = Exclude<
@@ -57,7 +56,7 @@ const Message: React.FC<Message> = ({
                         {reaction.name}
                         <View $fr>
                           {reaction.users?.map((user) => (
-                            <UserAvatar id={user} />
+                            <UserAvatar key={user} id={user} />
                           ))}
                         </View>
                       </Typography>

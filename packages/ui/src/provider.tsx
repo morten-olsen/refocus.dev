@@ -1,4 +1,4 @@
-import { DashboardProvider, Widget } from '@refocus/sdk';
+import { DashboardProvider, Widget, Notification } from '@refocus/sdk';
 import { UIProvider } from './theme/provider';
 import { useCallback, useMemo } from 'react';
 import { GithubLogin } from './github';
@@ -8,9 +8,14 @@ import { SlackLogin } from './slack';
 type FocusProviderProps = {
   children: React.ReactNode;
   widgets: Widget<any>[];
+  onNotificationsUpdate?: (notifications: Notification[]) => void;
 };
 
-const FocusProvider: React.FC<FocusProviderProps> = ({ children, widgets }) => {
+const FocusProvider: React.FC<FocusProviderProps> = ({
+  children,
+  widgets,
+  onNotificationsUpdate,
+}) => {
   const save = useCallback((data: any) => {
     localStorage.setItem('boards', JSON.stringify(data));
   }, []);
@@ -42,6 +47,7 @@ const FocusProvider: React.FC<FocusProviderProps> = ({ children, widgets }) => {
         save={save}
         widgets={widgets}
         logins={logins}
+        onNotificationsUpdate={onNotificationsUpdate}
       >
         {children}
       </DashboardProvider>

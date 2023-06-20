@@ -1,4 +1,10 @@
-import { createContext, useCallback, useMemo, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import type { Notification } from './types';
 
 type NotificationsContextValue = {
@@ -9,6 +15,7 @@ type NotificationsContextValue = {
 
 type NotificationsProviderProps = {
   children: React.ReactNode;
+  onNotificationsUpdate?: (notification: Notification[]) => void;
 };
 
 const NotificationsContext = createContext<NotificationsContextValue | null>(
@@ -19,6 +26,7 @@ let nextId = 0;
 
 const NotificationsProvider: React.FC<NotificationsProviderProps> = ({
   children,
+  onNotificationsUpdate,
 }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
@@ -54,6 +62,10 @@ const NotificationsProvider: React.FC<NotificationsProviderProps> = ({
     () => ({ notifications, add, dismiss }),
     [notifications, add, dismiss],
   );
+
+  useEffect(() => {
+    onNotificationsUpdate?.(notifications);
+  }, [notifications, onNotificationsUpdate]);
 
   return (
     <NotificationsContext.Provider value={value}>

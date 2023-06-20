@@ -6,7 +6,7 @@ import {
   SlackLogin,
 } from './clients';
 import { Widget, WidgetsProvider } from './widgets';
-import { NotificationsProvider } from './notifications';
+import { NotificationsProvider, Notification } from './notifications';
 import { BoardsLoad, BoardsProvider, BoardsSave } from './boards';
 
 type DashboardProviderProps = {
@@ -14,6 +14,7 @@ type DashboardProviderProps = {
   widgets?: Widget<TSchema>[];
   load: BoardsLoad;
   save: BoardsSave;
+  onNotificationsUpdate?: (notifications: Notification[]) => void;
   logins: {
     github: GithubLogin;
     linear: LinearLogin;
@@ -27,10 +28,11 @@ const DashboardProvider: React.FC<DashboardProviderProps> = ({
   load,
   save,
   logins,
+  onNotificationsUpdate,
 }) => (
   <WidgetsProvider widgets={widgets}>
     <BoardsProvider load={load} save={save}>
-      <NotificationsProvider>
+      <NotificationsProvider onNotificationsUpdate={onNotificationsUpdate}>
         <ClientProvider logins={logins}>{children}</ClientProvider>
       </NotificationsProvider>
     </BoardsProvider>

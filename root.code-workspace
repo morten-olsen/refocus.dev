@@ -17,6 +17,10 @@
 			"path": "packages/app/src"
 		},
 		{
+			"name": "desktop",
+			"path": "packages/desktop/src"
+		},
+		{
 			"name": ".",
 			"path": "."
 		},

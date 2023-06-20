@@ -11,3 +11,4 @@ export * from './masonry';
 export * from './code-editor';
 export * from './popover';
 export * from './form';
+export * from './loader';
